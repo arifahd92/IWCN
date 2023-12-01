@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Frontend Task</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous" />
+    <!-- React library scripts -->
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  </head>
+  <body>
+    <!-- Container for React rendering -->
+    <div id="root"></div>
+
+    <!-- React script -->
+    <script type="text/babel">
+      // Define a simple editable table component using functional component
+      const EditableTable = () => {
+        // State using the 'useState' hook
+        const [data, setData] = React.useState([
+          {
+            id: 1,
+            name: "md arif 1",
+            age: 25,
+            email: "mdarif1@example.com",
+          },
+          {
+            id: 2,
+            name: "md arif 2",
+            age: 30,
+            email: "mdarif2@example.com",
+          },
+          {
+            id: 3,
+            name: "md arif 3",
+            age: 30,
+            email: "mdarif3@example.com",
+          },
+          {
+            id: 4,
+            name: "md arif 4",
+            age: 30,
+            email: "mdarif4@example.com",
+          },
+        ]);
+        const sendDataToBackend = async (newData) => {
+          try {
+            console.log(newData, "will be sent to backend");
+          } catch (error) {}
+        };
+        const handleEdit = (id, field, value, index) => {
+          console.log("handleEdit called");
+          let oldEntry = data[index];
+          let newEntry = { ...oldEntry, [field]: value };
+          let newData = [...data]; //copied in another variable
+          newData.splice(index, 1, newEntry);
+          console.log(newData);
+          sendDataToBackend(newData);
+          setData(newData);
+        };
+        // add new row functionality
+        const addRow = () => {
+          let nextId = data.length;
+          setData([...data, { id: nextId, name: "", age: "", email: "" }]);
+        };
+        return (
+          <div className="container mt-4">
+            <table className="table table-bordered table-responsive-md">
+              <thead className="thead-dark">
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td
+                      className="editable-cell"
+                      contentEditable
+                      onBlur={(e) =>
+                        handleEdit(item.id, "name", e.target.textContent, index)
+                      }>
+                      {item.name}
+                    </td>
+                    <td
+                      className="editable-cell"
+                      contentEditable
+                      onBlur={(e) =>
+                        handleEdit(item.id, "age", e.target.textContent, index)
+                      }>
+                      {item.age}
+                    </td>
+                    <td
+                      className="editable-cell"
+                      contentEditable
+                      onBlur={(e) =>
+                        handleEdit(
+                          item.id,
+                          "email",
+                          e.target.textContent,
+                          index
+                        )
+                      }>
+                      {item.email}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div>
+              <button className="btn btn-primary" onClick={addRow}>
+                add a new row
+              </button>
+            </div>
+          </div>
+        );
+      };
+      ReactDOM.render(<EditableTable />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
